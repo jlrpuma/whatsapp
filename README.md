@@ -2,7 +2,7 @@
 
 This is a learning project to get familiar with some topics related to Golang.
 
-make sure to have your exported file on data/
+make sure to have your exported file on ./data/
 
 ```bash
 go run main.go
