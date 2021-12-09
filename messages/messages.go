@@ -1,4 +1,4 @@
-package models
+package messages
 
 type Message struct {
 	SentOn  string

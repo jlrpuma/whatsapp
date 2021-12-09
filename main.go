@@ -33,15 +33,17 @@ func printCounting() error {
 	done := make(chan interface{})
 	defer close(done)
 
-	filter := filters.StringsFilter{}
-	transformer := transformers.DefaultTransformer{}
-	counter := counters.ParticipantCounter{}
+	var filter filters.StringsFilter
+	var transformer transformers.DefaultTransformer
+	var counter counters.ParticipantCounter
 
 	messages := getMessagesChan(done, file)
 	filteredMessages := filter.Filter(done, messages)
 	messagesOnStructs := transformer.Transform(done, filteredMessages)
 
-	counter.Count(done, messagesOnStructs)
+	for _, userMessage := range counter.Count(messagesOnStructs) {
+		fmt.Printf("%-40s%d\n", userMessage.Sender, userMessage.Counter)
+	}
 
 	return nil
 }

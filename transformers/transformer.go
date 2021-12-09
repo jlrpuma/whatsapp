@@ -3,7 +3,7 @@ package transformers
 import (
 	"strings"
 
-	m "github.com/whatsapp/models"
+	msgs "github.com/whatsapp/messages"
 )
 
 type Transformer interface {
@@ -12,8 +12,8 @@ type Transformer interface {
 
 type DefaultTransformer struct{}
 
-func (dt *DefaultTransformer) Transform(done <-chan interface{}, messages <-chan string) <-chan m.Message {
-	out := make(chan m.Message)
+func (dt *DefaultTransformer) Transform(done <-chan interface{}, messages <-chan string) <-chan msgs.Message {
+	out := make(chan msgs.Message)
 
 	go func() {
 		defer close(out)
@@ -22,14 +22,14 @@ func (dt *DefaultTransformer) Transform(done <-chan interface{}, messages <-chan
 			select {
 			case <-done:
 				return
-			case message, ok := <-messages:
+			case msg, ok := <-messages:
 				if !ok {
 					return
 				}
-				sentOn := strings.Replace(strings.Split(message, "]")[0], "[", "", -1)
-				sender := strings.Split(strings.Split(message, "]")[1], ":")[0]
-				msg := ""
-				out <- m.Message{SentOn: sentOn, Sender: sender, Message: msg}
+				sentOn := strings.Replace(strings.Split(msg, "]")[0], "[", "", -1)
+				sender := strings.Split(strings.Split(msg, "]")[1], ":")[0]
+				content := ""
+				out <- msgs.Message{SentOn: sentOn, Sender: sender, Message: content}
 			}
 		}
 	}()
